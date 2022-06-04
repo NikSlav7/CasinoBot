@@ -20,6 +20,7 @@ public class CheckIfChannelUserExists extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String id = event.getAuthor().getId() + event.getChannel().getId();
-        jdbcChannels.checkIfChannelUserExists(id, event.getAuthor().getName(), chanelsRepo.getById(event.getChannel().getId()));
+//        jdbcChannels.checkIfChannelUserExists(id, event.getAuthor().getName(), chanelsRepo.getById(event.getChannel().getId()));
+
     }
 }

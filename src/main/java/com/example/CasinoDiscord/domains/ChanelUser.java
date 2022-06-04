@@ -1,29 +1,25 @@
 package com.example.CasinoDiscord.domains;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 
 
 @Entity
 @Table(name = "ChanelUser")
-public class ChanelUser {
+public class ChanelUser implements Serializable {
 
-
-    @Id
-    @Column(name = "user_id", updatable = false, nullable = false)
-    String id;
+    @EmbeddedId
+    UserId userId;
 
     String username;
-
     float money;
 
-    @ManyToOne()
-    @JoinColumn(name = "channel_id")
-    Chanel chanel;
 
-    public ChanelUser(String id, String username, float money) {
-        this.id = id;
+    public ChanelUser(UserId id, String username, float money) {
+
+        this.userId = id;
         this.username = username;
         this.money = money;
     }
@@ -31,12 +27,12 @@ public class ChanelUser {
     public ChanelUser() {
     }
 
-    public String getId() {
-        return id;
+    public UserId getId() {
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(UserId id) {
+        this.userId = id;
     }
 
     public String getUsername() {
@@ -55,11 +51,6 @@ public class ChanelUser {
         this.money = money;
     }
 
-    public Chanel getChanel() {
-        return chanel;
-    }
 
-    public void setChanel(Chanel chanel) {
-        this.chanel = chanel;
-    }
+
 }

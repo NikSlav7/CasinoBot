@@ -26,4 +26,5 @@ public class CheckIfChannelExistsManager extends ListenerAdapter {
         int a = jdbcChannels.checkIfChannelExists(event.getChannel().getId());
         System.out.println(a);
     }
+
 }

@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface ChanelUserRepo extends JpaRepository<ChanelUser, String > {
-    Optional<ChanelUser> getChanelUserById(String id);
+    Optional<ChanelUser> getChanelUserByUserId(String userID);
 }
