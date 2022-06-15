@@ -1,6 +1,7 @@
 package com.example.CasinoDiscord.JDBCS;
 
 import com.example.CasinoDiscord.Person;
+import com.example.CasinoDiscord.domains.UserChanelId;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import javax.transaction.Transactional;
@@ -11,6 +12,6 @@ public interface PersonJDBCInterface {
     List<Person> findAll();
     int addMoney(String userId, float amountOfMoney);
 
-    int payMoney(String senderUserId, String receiverUserId, float amountOfMoney, MessageReceivedEvent event);
+    public int payMoney(UserChanelId senderUserId, UserChanelId receiverUserId, float amountOfMoney, MessageReceivedEvent event);
 
 }

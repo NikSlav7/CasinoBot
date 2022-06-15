@@ -13,7 +13,7 @@ public class Chanel {
     @Column(name = "chanel_id", updatable = false, nullable = false)
     String channelId;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId.user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userChanelId.chanel", fetch = FetchType.EAGER)
     List<ChanelUser> chanelUsers;
 
     public Chanel(String channelId, List<ChanelUser> channelUser) {
@@ -21,6 +21,9 @@ public class Chanel {
         chanelUsers = channelUser;
     }
 
+    public Chanel(String channelId) {
+        this.channelId = channelId;
+    }
 
     public Chanel() {
         chanelUsers  = new ArrayList<ChanelUser>();

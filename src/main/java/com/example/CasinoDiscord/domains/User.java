@@ -13,10 +13,14 @@ public class User {
     @Column(name = "user_id")
     String userId;
 
-
     String username;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId.chanel")
+
+    @OneToMany(cascade = CascadeType.ALL,  mappedBy = "id.user", fetch = FetchType.LAZY)
+    List<RouletteBet> rouletteBetList;
+
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userChanelId.user", fetch = FetchType.EAGER)
     List<ChanelUser> chanelUser;
 
     public User() {

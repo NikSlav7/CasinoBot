@@ -6,24 +6,24 @@ import java.util.Objects;
 
 
 @Embeddable
-public class UserId implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY)
+public class UserChanelId implements Serializable {
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
             @JoinColumn(referencedColumnName = "user_id", name = "user_id")
     })
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
             @JoinColumn(referencedColumnName = "chanel_id", name = "chanel_id")
     })
 
     private Chanel chanel;
 
-    public UserId() {
+    public UserChanelId() {
     }
 
-    public UserId(User user, Chanel chanel) {
+    public UserChanelId(User user, Chanel chanel) {
         this.user = user;
         this.chanel = chanel;
     }
@@ -48,7 +48,7 @@ public class UserId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserId userId = (UserId) o;
+        UserChanelId userId = (UserChanelId) o;
         return Objects.equals(user, userId.user) && Objects.equals(chanel, userId.chanel);
     }
 

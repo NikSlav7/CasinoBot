@@ -11,28 +11,29 @@ import java.util.List;
 public class ChanelUser implements Serializable {
 
     @EmbeddedId
-    UserId userId;
+    UserChanelId userChanelId;
 
     String username;
     float money;
 
 
-    public ChanelUser(UserId id, String username, float money) {
+    public ChanelUser(UserChanelId id, String username, float money) {
 
-        this.userId = id;
+        this.userChanelId = id;
         this.username = username;
         this.money = money;
     }
 
+
     public ChanelUser() {
     }
 
-    public UserId getId() {
-        return userId;
+    public UserChanelId getId() {
+        return userChanelId;
     }
 
-    public void setId(UserId id) {
-        this.userId = id;
+    public void setId(UserChanelId id) {
+        this.userChanelId = id;
     }
 
     public String getUsername() {

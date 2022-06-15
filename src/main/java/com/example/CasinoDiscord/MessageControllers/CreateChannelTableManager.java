@@ -15,6 +15,7 @@ public class CreateChannelTableManager extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        jdbcChannels.initializeNewChannelTable(event.getChannel().getId(), event.getGuild());
+        jdbcChannels.initializeNewChannelTable(event.getGuild().getId(), event.getMember().getId(), event.getGuild());
+        System.out.println("NEw table init " + event.getGuild().getId());
     }
 }

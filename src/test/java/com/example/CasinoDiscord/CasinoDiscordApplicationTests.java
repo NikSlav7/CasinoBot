@@ -38,18 +38,20 @@ class CasinoDiscordApplicationTests {
     @Commit
     @Transactional
     void test() {
-        User nikslav = new User();
-        nikslav.setUserId("1234563");
-        nikslav.setUsername("nikslav");
-        Chanel chanel = new Chanel();
-        chanel.setChannelId("testO");
-        UserId userId = new UserId();
-        userId.setUser(nikslav);
-        userId.setChanel(chanel);
-        ChanelUser chanelUser = new ChanelUser(userId, nikslav.getUsername(), 0);
-        usersRepo.save(nikslav);
-        repo.save(chanel);
-        chanelUserRepo.save(chanelUser);
+//        User nikslav = new User();
+//        nikslav.setUserId("1234563");
+//        nikslav.setUsername("nikslav");
+//        Chanel chanel = new Chanel();
+//        chanel.setChannelId("testO");
+//        UserId userId = new UserId();
+//        userId.setUser(nikslav);
+//        userId.setChanel(chanel);
+//        ChanelUser chanelUser = new ChanelUser(userId, nikslav.getUsername(), 0);
+//        usersRepo.save(nikslav);
+//        repo.save(chanel);
+//        chanelUserRepo.save(chanelUser);
+
+        assert repo.findChanelByChannelId("784453789037494315").get().getChannelUser().size() > 0;
 
 
 

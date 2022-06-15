@@ -3,6 +3,7 @@ package com.example.CasinoDiscord.JDBCS;
 import com.example.CasinoDiscord.Exceptions.NoEnoughMoneyException;
 import com.example.CasinoDiscord.Person;
 import com.example.CasinoDiscord.domains.ChanelUser;
+import com.example.CasinoDiscord.domains.UserChanelId;
 import com.example.CasinoDiscord.repositories.ChanelUserRepo;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +47,14 @@ public class JDBCPerson implements PersonJDBCInterface {
 
     @Override
     @Transactional
-    public int payMoney(String senderUserId, String receiverUserId, float amountOfMoney, MessageReceivedEvent event) {
-        ChanelUser sender = repo.getChanelUserByUserId(senderUserId).get();
+    public int payMoney(UserChanelId senderUserId, UserChanelId receiverUserId, float amountOfMoney, MessageReceivedEvent event) {
+        ChanelUser sender = repo.findChanelUserByUserChanelId(senderUserId).get();
         if (sender.getMoney() < amountOfMoney) {
             throw new NoEnoughMoneyException(event.getChannel());
         };
         int i = template.update("UPDATE chanel_user SET money = money - ? WHERE user_id = ?", amountOfMoney, senderUserId);
         int j = template.update("UPDATE chanel_user SET money = money + ? WHERE user_id = ?", amountOfMoney, receiverUserId);
+
         return i + j;
     }
 

@@ -38,7 +38,6 @@ public class InfoEventManager extends ListenerAdapter {
 
 
 
-    @Transactional
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String fullMessage = event.getMessage().getContentRaw();
@@ -47,16 +46,12 @@ public class InfoEventManager extends ListenerAdapter {
             if (words[0].equalsIgnoreCase(CasinoDiscordApplication.MessageStartingKey + "all-users")) {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setTitle("All users");
-
                 builder.setColor(Color.CYAN);
                 builder.setAuthor("Casino Bot");
                 String names = "";
                 String money = "";
 
-
-                List<ChanelUser> chanelUserList = chanelsRepo.findChanelByChannelId("first").get().getChannelUser();
-
-                System.out.println(chanelsRepo.findChanelByChannelId("first").get().getChannelId());
+                List<ChanelUser> chanelUserList = chanelsRepo.findChanelByChannelId(event.getGuild().getId()).get().getChannelUser();
                 System.out.println(chanelUserList.size());
                 ListIterator<ChanelUser> addAllPeopleToMessage = chanelUserList.listIterator();
                 while (addAllPeopleToMessage.hasNext()) {
@@ -70,8 +65,7 @@ public class InfoEventManager extends ListenerAdapter {
                 event.getChannel().sendMessageEmbeds(builder.build()).queue();
             }
         }
-
-
+        System.out.println("Info manager tasks");
     }
 
 }

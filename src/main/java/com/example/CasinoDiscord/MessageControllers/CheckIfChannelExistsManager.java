@@ -23,7 +23,7 @@ public class CheckIfChannelExistsManager extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        int a = jdbcChannels.checkIfChannelExists(event.getChannel().getId());
+        int a = jdbcChannels.checkIfChannelExists(event.getGuild().getId());
         System.out.println(a);
     }
 
