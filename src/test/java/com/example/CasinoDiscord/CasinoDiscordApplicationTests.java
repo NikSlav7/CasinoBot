@@ -1,9 +1,7 @@
 package com.example.CasinoDiscord;
 
-import com.example.CasinoDiscord.domains.Chanel;
-import com.example.CasinoDiscord.domains.ChanelUser;
-import com.example.CasinoDiscord.domains.User;
-import com.example.CasinoDiscord.domains.UserId;
+import com.example.CasinoDiscord.Game.RandomResultGenerator;
+import com.example.CasinoDiscord.domains.*;
 import com.example.CasinoDiscord.repositories.ChanelUserRepo;
 import com.example.CasinoDiscord.repositories.ChanelsRepo;
 import com.example.CasinoDiscord.JDBCS.JDBCChannels;
@@ -31,6 +29,8 @@ class CasinoDiscordApplicationTests {
     @Autowired
     ChanelUserRepo chanelUserRepo;
 
+    @Autowired
+    RandomResultGenerator generator;
 
 
 
@@ -38,20 +38,9 @@ class CasinoDiscordApplicationTests {
     @Commit
     @Transactional
     void test() {
-//        User nikslav = new User();
-//        nikslav.setUserId("1234563");
-//        nikslav.setUsername("nikslav");
-//        Chanel chanel = new Chanel();
-//        chanel.setChannelId("testO");
-//        UserId userId = new UserId();
-//        userId.setUser(nikslav);
-//        userId.setChanel(chanel);
-//        ChanelUser chanelUser = new ChanelUser(userId, nikslav.getUsername(), 0);
-//        usersRepo.save(nikslav);
-//        repo.save(chanel);
-//        chanelUserRepo.save(chanelUser);
-
-        assert repo.findChanelByChannelId("784453789037494315").get().getChannelUser().size() > 0;
+//
+        BetResult a = generator.generateBetResult();
+        System.out.println(a.toString());
 
 
 

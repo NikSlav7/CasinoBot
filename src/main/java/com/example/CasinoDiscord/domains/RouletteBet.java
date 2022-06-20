@@ -45,14 +45,14 @@ public class RouletteBet {
 
 
     public RouletteBet(RouletteId rouletteId, int color, int even, int size, int number, float money) {
-        this.id = id;
+        this.id = rouletteId;
         this.color = color;
         this.even = even;
         this.size = size;
         this.money = money;
     }
     public RouletteBet(RouletteId rouletteId, int color, int even, int size, int number, float money, RouletteBetsTable rouletteBetsTable) {
-        this.id = id;
+        this.id = rouletteId;
         this.color = color;
         this.even = even;
         this.size = size;

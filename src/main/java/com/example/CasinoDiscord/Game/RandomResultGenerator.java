@@ -2,6 +2,7 @@ package com.example.CasinoDiscord.Game;
 
 
 import com.example.CasinoDiscord.domains.BetResult;
+import com.example.CasinoDiscord.domains.RouletteBet;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
@@ -11,16 +12,42 @@ public class RandomResultGenerator {
 
     public BetResult generateBetResult(){
       BetResult result = new BetResult();
-        Random r1 = new Random();
-        Random r2 = new Random();
-        Random r3 = new Random();
-        Random r4 = new Random();
+        Random random = new Random();
+        result.setNumber(random.nextInt(37));
+        int num = result.getNumber();
 
-        result.setColor(r1.nextInt(2) + 1);
-        result.setEven(r2.nextInt(2) + 1);
-        result.setSize(r3.nextInt(2) + 1);
-        result.setNumber(r4.nextInt(37));
-        return result;
+        if (num == 0) {
+          return result;
+        }
+
+        //size
+        if (num > 16) {
+          result.setSize(RouletteBet.BIG);
+        }
+        else {
+          result.setSize(RouletteBet.SMALL);
+        }
+
+        //even
+      if (num % 2 == 0){
+        result.setEven(RouletteBet.EVEN);
+      }
+      else {
+        result.setEven(RouletteBet.ODD);
+
+      }
+
+      int[] red = new int[]{1, 3, 5 , 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36};
+
+      result.setColor(RouletteBet.BLACK);
+      for (int i : red) {
+        if (i == num) {
+          result.setColor(RouletteBet.RED);
+          break;
+        }
+      }
+      System.out.println(result.toString());
+      return result;
 
     }
 }

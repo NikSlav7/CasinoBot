@@ -41,7 +41,7 @@ public class RouletteBetDeterminator {
                 rouletteBet.setNumber(i);
             }
         } catch (NumberFormatException e){
-            e.printStackTrace();
+            rouletteBet.setNumber(-1);
         }
         System.out.println("Loh");
         return rouletteBet;

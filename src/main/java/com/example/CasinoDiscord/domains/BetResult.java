@@ -50,4 +50,14 @@ public class BetResult {
     public void setNumber(int number) {
         this.number = number;
     }
+
+    @Override
+    public String toString() {
+        return "BetResult{" +
+                "color=" + color +
+                ", even=" + even +
+                ", size=" + size +
+                ", number=" + number +
+                '}';
+    }
 }

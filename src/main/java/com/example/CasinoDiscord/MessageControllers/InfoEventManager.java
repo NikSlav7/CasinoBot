@@ -6,6 +6,7 @@ import com.example.CasinoDiscord.repositories.ChanelUserRepo;
 import com.example.CasinoDiscord.repositories.ChanelsRepo;
 import com.example.CasinoDiscord.JDBCS.JDBCChannels;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,7 @@ public class InfoEventManager extends ListenerAdapter {
                 builder.setAuthor("Casino Bot");
                 String names = "";
                 String money = "";
+
 
                 List<ChanelUser> chanelUserList = chanelsRepo.findChanelByChannelId(event.getGuild().getId()).get().getChannelUser();
                 System.out.println(chanelUserList.size());

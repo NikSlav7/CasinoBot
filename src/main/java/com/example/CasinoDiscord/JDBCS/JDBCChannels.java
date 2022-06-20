@@ -1,14 +1,18 @@
 package com.example.CasinoDiscord.JDBCS;
 
+import com.example.CasinoDiscord.Spring.SpringApplicationContextProvider;
 import com.example.CasinoDiscord.domains.Chanel;
 import com.example.CasinoDiscord.domains.ChanelUser;
 import com.example.CasinoDiscord.domains.User;
 import com.example.CasinoDiscord.domains.UserChanelId;
 import com.example.CasinoDiscord.repositories.ChanelUserRepo;
 import com.example.CasinoDiscord.repositories.ChanelsRepo;
+import com.example.CasinoDiscord.repositories.MessageChannelRepo;
 import com.example.CasinoDiscord.repositories.UsersRepo;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -55,47 +59,61 @@ public class JDBCChannels implements ChannelsJDBC {
     @Transactional
     public int checkIfChanelUserExists(Guild guild, String userId, String chanelId) {
         Member member = guild.getMemberById(userId);
+        if (member.getUser().isBot()) return -1;
+        int j = guild.loadMembers().get().size();
+        checkIfUserExists(userId, member.getAsMention());
         UserChanelId id = new UserChanelId(usersRepo.findUserByUserId(userId).get(), chanelsRepo.findChanelByChannelId(chanelId).get());
         if (chanelUserRepo.findChanelUserByUserChanelId(id).isPresent()) return -1;
-        ChanelUser chanelUser = new ChanelUser(id, member.getEffectiveName(), 0);
+        ChanelUser chanelUser = new ChanelUser(id, member.getAsMention(), 0);
         chanelUserRepo.save(chanelUser);
         return 1;
+    }
+
+    @Override
+    public void pay(UserChanelId sender, UserChanelId receiver, float amount) {
+        jdbcTemplate.update("UPDATE chanel_user SET money = money - ? WHERE user_id = ? AND chanel_id = ?", amount, sender.getUser().getUserId(), sender.getChanel().getChannelId());
+        jdbcTemplate.update("UPDATE chanel_user SET money = money + ? WHERE user_id = ? AND chanel_id = ?", amount, receiver.getUser().getUserId(), receiver.getChanel().getChannelId());
     }
 
 
 
 
-    public void initializeNewChannelTable(String channelId, String userId, Guild guild){
+
+
+    public void initializeNewChannelTable(String channelId, String userId, Guild guild, MessageChannel messageChannel){
         if (!chanelsRepo.findChanelByChannelId(channelId).isPresent()) checkIfChannelExists(channelId);
         else {
              checkIfChanelUserExists(guild, userId, channelId);
             return;
         }
-        checkIfChannelExists(channelId);
+
+        SpringApplicationContextProvider.getApplicationContext().getBean(MessageChannelRepo.class).addMessageChannel(channelId, messageChannel);
+
 
         Chanel chanel = chanelsRepo.findChanelByChannelId(channelId).get();
 
-        List<Member> members = guild.getMembers().stream()
-                .filter(member -> !member.getRoles().contains(guild.getBotRole()))
-                        .collect(Collectors.toList());
 
+        List<Member> members = guild.getMembers();
+
+        int i = members.size();
         for (Member member : members) {
 
             Chanel userChanel = chanel;
 
             if (usersRepo.findUserByUserId(member.getId()).isEmpty()) {
-                checkIfUserExists(member.getId(), member.getEffectiveName());
+                checkIfUserExists(member.getId(), member.getAsMention());
             }
 
             User user = usersRepo.findUserByUserId(member.getId()).get();
 
-            chanelUserRepo.save(new ChanelUser(new UserChanelId(user, userChanel), member.getEffectiveName(), 0));
-
+            chanelUserRepo.save(new ChanelUser(new UserChanelId(user, userChanel), member.getAsMention(), 0));
 
         }
 
-//
 
+    }
+    public boolean checkSufficientFunds(UserChanelId userChanelId, float amount) {
+        return chanelUserRepo.findChanelUserByUserChanelId(userChanelId).get().getMoney() >= amount;
     }
 
 

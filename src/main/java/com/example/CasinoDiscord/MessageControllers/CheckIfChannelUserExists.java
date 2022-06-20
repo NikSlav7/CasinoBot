@@ -23,4 +23,5 @@ public class CheckIfChannelUserExists extends ListenerAdapter {
 //        jdbcChannels.checkIfChannelUserExists(id, event.getAuthor().getName(), chanelsRepo.getById(event.getChannel().getId()));
 
     }
+
 }
