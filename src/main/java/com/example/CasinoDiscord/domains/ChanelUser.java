@@ -16,13 +16,17 @@ public class ChanelUser implements Serializable {
     String username;
     float money;
 
+    int coinFlipWinChance;
+
 
     public ChanelUser(UserChanelId id, String username, float money) {
 
         this.userChanelId = id;
         this.username = username;
         this.money = money;
+        coinFlipWinChance = 50;
     }
+
 
 
     public ChanelUser() {
@@ -52,6 +56,25 @@ public class ChanelUser implements Serializable {
         this.money = money;
     }
 
+    public UserChanelId getUserChanelId() {
+        return userChanelId;
+    }
 
+    public void setUserChanelId(UserChanelId userChanelId) {
+        this.userChanelId = userChanelId;
+    }
 
+    public int getCoinFlipWinChance() {
+        return coinFlipWinChance;
+    }
+
+    public void setCoinFlipWinChance(int coinFlipWinChance) {
+        this.coinFlipWinChance = coinFlipWinChance;
+    }
+    public void setCoinFlipWinChanceToDefault() {
+        coinFlipWinChance = 50;
+    }
+    public void upgradeCoinFlipWinChance() {
+        coinFlipWinChance = coinFlipWinChance == 75 ? coinFlipWinChance : coinFlipWinChance + 1;
+    }
 }

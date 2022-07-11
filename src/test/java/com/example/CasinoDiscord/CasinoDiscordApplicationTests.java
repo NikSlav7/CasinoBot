@@ -1,12 +1,12 @@
 package com.example.CasinoDiscord;
 
-import com.example.CasinoDiscord.Game.RandomResultGenerator;
-import com.example.CasinoDiscord.domains.*;
+import com.example.CasinoDiscord.Roulette.RandomResultGenerator;
+import com.example.CasinoDiscord.JDBCS.JDBCMessage;
+import com.example.CasinoDiscord.dataSaving.SaveMessage;
 import com.example.CasinoDiscord.repositories.ChanelUserRepo;
 import com.example.CasinoDiscord.repositories.ChanelsRepo;
 import com.example.CasinoDiscord.JDBCS.JDBCChannels;
 import com.example.CasinoDiscord.repositories.UsersRepo;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @SpringBootTest
 @ComponentScan(basePackages = "com.example.CasinoDiscord")
@@ -32,16 +33,19 @@ class CasinoDiscordApplicationTests {
     @Autowired
     RandomResultGenerator generator;
 
+    @Autowired
+    JDBCMessage jdbcMessage;
+
 
 
     @Test
     @Commit
     @Transactional
     void test() {
-//
-        BetResult a = generator.generateBetResult();
-        System.out.println(a.toString());
 
+       List<SaveMessage> list = jdbcMessage.getChanelUserMessages("683714219962531888", "784453789037494312", 2);
+
+        assert list.size() > 0;
 
 
     }

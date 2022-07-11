@@ -8,14 +8,19 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import java.util.List;
 
 public interface ChannelsJDBC {
-     int addMoney(String userId, String channelId, float amount);
-     int checkIfChannelExists(String id);
-     void initializeNewChannelTable(String channelId, String userId,  Guild guild, MessageChannel messageChannel);
-     boolean checkSufficientFunds(UserChanelId userChanelId, float amount);
 
+     void addMoney(String userId, String channelId, float amount);
+     int checkIfChannelExists(String id);
      int checkIfChanelUserExists(Guild guild, String userId, String chanelId);
 
+
+     void initializeNewChannelTable(String channelId, String userId,  Guild guild, MessageChannel messageChannel) throws InterruptedException;
      void pay(UserChanelId sender, UserChanelId receiver, float amount);
+
+     void removeMoney(String userId, String channelId, float amount);
+
+     boolean checkSufficientFunds(UserChanelId userChanelId, float amount);
+
 
 
 }

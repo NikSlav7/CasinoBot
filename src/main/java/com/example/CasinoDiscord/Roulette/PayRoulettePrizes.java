@@ -1,11 +1,9 @@
-package com.example.CasinoDiscord.Game;
+package com.example.CasinoDiscord.Roulette;
 
 
 import com.example.CasinoDiscord.domains.BetResult;
 import com.example.CasinoDiscord.domains.RouletteBet;
-import com.example.CasinoDiscord.messageSender.MessageSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +31,7 @@ public class PayRoulettePrizes {
             if (bet.getColor() == color) {
                 template.update("UPDATE chanel_user SET money = money + ? WHERE user_id = ? AND chanel_id = ?", money * 2, bet.getId().getUser().getUserId(), bet.getRouletteBetsTable().getId());
                 addPrizeToHashMap(winners, bet.getId().getUser().getUsername(), money * 2);
+                System.out.println(money);
             }
             if (bet.getEven() == even) {
                 template.update("UPDATE chanel_user SET money = money + ? WHERE user_id = ? AND chanel_id = ?", money * 2, bet.getId().getUser().getUserId(), bet.getRouletteBetsTable().getId());
@@ -44,9 +43,9 @@ public class PayRoulettePrizes {
                 addPrizeToHashMap(winners, bet.getId().getUser().getUsername(), money * 2);
 
             }
-            if (bet.getColor() == color) {
+            if (bet.getNumber() == num) {
                 template.update("UPDATE chanel_user SET money = money + ? WHERE user_id = ? AND chanel_id = ?", money * 32, bet.getId().getUser().getUserId(), bet.getRouletteBetsTable().getId());
-                addPrizeToHashMap(winners, bet.getId().getUser().getUsername(), money * 2);
+                addPrizeToHashMap(winners, bet.getId().getUser().getUsername(), money * 36);
 
             }
 

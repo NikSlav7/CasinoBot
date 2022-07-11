@@ -1,10 +1,11 @@
-package com.example.CasinoDiscord.Game;
+package com.example.CasinoDiscord.Roulette;
 
 
 import com.example.CasinoDiscord.MessageEditors.MessageEditor;
 import com.example.CasinoDiscord.Spring.SpringApplicationContextProvider;
 import com.example.CasinoDiscord.domains.BetResult;
 import com.example.CasinoDiscord.domains.RouletteBet;
+import com.example.CasinoDiscord.domains.RouletteBetsTable;
 import com.example.CasinoDiscord.messageSender.MessageSender;
 import com.example.CasinoDiscord.repositories.MessageChannelRepo;
 import com.example.CasinoDiscord.repositories.RouletteBetsTableRepo;
@@ -17,7 +18,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @EnableScheduling
@@ -54,17 +57,18 @@ public class CheckRoulleteWinners {
 
 
     @Scheduled(fixedRate = 10000)
-    @Transactional
+    @Transactional(dontRollbackOn = {RuntimeException.class})
     public void checkExpiredGames(){
-
         List<RouletteBet> rouletteBets = jdbcTemplate.query("SELECT roulette.uuid, roulette.color, roulette.even, roulette.size, roulette.number ,roulette.user_user_id, roulette_bets_table.id, roulette.money  FROM roulette JOIN roulette_bets_table ON roulette.roulette_bets_table_id = roulette_bets_table.id WHERE " + System.currentTimeMillis() +" - time_when_created > 10000",
                 SpringApplicationContextProvider.getApplicationContext().getBean(RouletteBetsRowMapper.class));
-        betsTableRepo.deleteRouletteBetsTableByTimeWhenCreatedLessThan(System.currentTimeMillis() - 10000);
+        Set<RouletteBetsTable> tableSet = new HashSet<>();
+        rouletteBets.forEach(r -> tableSet.add(r.getRouletteBetsTable()));
+        betsTableRepo.deleteAll(tableSet);
         System.out.println(rouletteBets.get(0).toString());
 
         BetResult betResult = randomResultGenerator.generateBetResult();
         if (rouletteBets.size() > 0) {
-            MessageSender.rouletteGameResults(repo.getMessageChannel(rouletteBets.get(0).getRouletteBetsTable().getId()), payRoulettePrizes.givePrizes(rouletteBets, betResult), messageEditor.createResultString(betResult));
+            MessageSender.rouletteGameResults(repo.getMessageChannel(rouletteBets.get(0).getRouletteBetsTable().getChanelId()), payRoulettePrizes.givePrizes(rouletteBets, betResult), messageEditor.createResultString(betResult));
 
         }
 

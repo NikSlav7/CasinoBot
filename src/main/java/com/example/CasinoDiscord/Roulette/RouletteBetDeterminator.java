@@ -1,4 +1,4 @@
-package com.example.CasinoDiscord.Game;
+package com.example.CasinoDiscord.Roulette;
 
 
 import com.example.CasinoDiscord.domains.RouletteBet;

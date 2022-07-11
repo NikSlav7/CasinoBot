@@ -2,6 +2,7 @@ package com.example.CasinoDiscord.domains;
 
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -120,6 +121,7 @@ public class RouletteBet {
         this.number = number;
     }
 
+
     @Override
     public String toString() {
         return "RouletteBet{" +
@@ -132,4 +134,6 @@ public class RouletteBet {
                 ", rouletteBetsTable=" + rouletteBetsTable +
                 '}';
     }
+
+
 }

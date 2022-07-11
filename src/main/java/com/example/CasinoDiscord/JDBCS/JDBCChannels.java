@@ -40,10 +40,7 @@ public class JDBCChannels implements ChannelsJDBC {
     UsersRepo usersRepo;
 
 
-    @Override
-    public int addMoney(String userId, String channelId, float amount) {
-        return jdbcTemplate.update("UPDATE chanel_user SET money = money + ? WHERE user_id = ? AND chanel_id = ?", amount, userId, channelId);
-    }
+
 
     public int checkIfChannelExists(String channelId){
         return jdbcTemplate.update("INSERT INTO channels(chanel_id) SELECT ? WHERE NOT EXISTS (SELECT * FROM channels WHERE chanel_id = ?)", channelId, channelId);
@@ -54,13 +51,15 @@ public class JDBCChannels implements ChannelsJDBC {
         return jdbcTemplate.update("INSERT INTO users(user_id, username) SELECT ?, ? WHERE NOT EXISTS (SELECT * FROM users WHERE user_id = ?);", userId, username, userId);
     }
 
-
+    public boolean checkSufficientFunds(UserChanelId userChanelId, float amount) {
+        return chanelUserRepo.findChanelUserByUserChanelId(userChanelId).get().getMoney() >= amount;
+    }
 
     @Transactional
-    public int checkIfChanelUserExists(Guild guild, String userId, String chanelId) {
+    public  int checkIfChanelUserExists(Guild guild, String userId, String chanelId) {
         Member member = guild.getMemberById(userId);
         if (member.getUser().isBot()) return -1;
-        int j = guild.loadMembers().get().size();
+
         checkIfUserExists(userId, member.getAsMention());
         UserChanelId id = new UserChanelId(usersRepo.findUserByUserId(userId).get(), chanelsRepo.findChanelByChannelId(chanelId).get());
         if (chanelUserRepo.findChanelUserByUserChanelId(id).isPresent()) return -1;
@@ -70,32 +69,38 @@ public class JDBCChannels implements ChannelsJDBC {
     }
 
     @Override
+    @Transactional
     public void pay(UserChanelId sender, UserChanelId receiver, float amount) {
         jdbcTemplate.update("UPDATE chanel_user SET money = money - ? WHERE user_id = ? AND chanel_id = ?", amount, sender.getUser().getUserId(), sender.getChanel().getChannelId());
         jdbcTemplate.update("UPDATE chanel_user SET money = money + ? WHERE user_id = ? AND chanel_id = ?", amount, receiver.getUser().getUserId(), receiver.getChanel().getChannelId());
     }
+    @Override
+    @Transactional
+    public void addMoney(String userId, String channelId, float amount) {
+        jdbcTemplate.update("UPDATE chanel_user SET money = money + ? WHERE user_id = ? AND chanel_id = ?", amount, userId, channelId);
+    }
+
+    @Override
+    public void removeMoney(String userId, String channelId, float amount) {
+        jdbcTemplate.update("UPDATE chanel_user SET money = money - ? WHERE user_id = ? AND chanel_id = ?", amount, userId, channelId);
+    }
 
 
-
-
-
-
-    public void initializeNewChannelTable(String channelId, String userId, Guild guild, MessageChannel messageChannel){
+    public void initializeNewChannelTable(String channelId, String userId, Guild guild, MessageChannel messageChannel)  {
+        SpringApplicationContextProvider.getApplicationContext().getBean(MessageChannelRepo.class).addMessageChannel(messageChannel.getId(), messageChannel);
         if (!chanelsRepo.findChanelByChannelId(channelId).isPresent()) checkIfChannelExists(channelId);
         else {
              checkIfChanelUserExists(guild, userId, channelId);
             return;
         }
 
-        SpringApplicationContextProvider.getApplicationContext().getBean(MessageChannelRepo.class).addMessageChannel(channelId, messageChannel);
-
-
         Chanel chanel = chanelsRepo.findChanelByChannelId(channelId).get();
 
 
-        List<Member> members = guild.getMembers();
+        List<Member> members = guild.getMembers()
+                .stream().filter(m -> !m.getUser().isBot()).collect(Collectors.toList());
 
-        int i = members.size();
+
         for (Member member : members) {
 
             Chanel userChanel = chanel;
@@ -112,9 +117,9 @@ public class JDBCChannels implements ChannelsJDBC {
 
 
     }
-    public boolean checkSufficientFunds(UserChanelId userChanelId, float amount) {
-        return chanelUserRepo.findChanelUserByUserChanelId(userChanelId).get().getMoney() >= amount;
-    }
+
+
+
 
 
 
